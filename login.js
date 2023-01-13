@@ -3,19 +3,22 @@ var attempt = 3; // Variable to count number of attempts.
 function validate(){
 var username = document.getElementById("username").value;
 var password = document.getElementById("password").value;
-if ( username == "Formget" && password == "formget#123"){
-alert ("Login successfully");
-window.location = "success.html"; // Redirecting to other page.
-return false;
-}
-else{
-attempt --;// Decrementing by one.
-Swal.fire({
+if ( username == "" && password == ""){
+//agregar sweet alert
+Swal.fire({ 
     icon: 'error',
     title: 'Oops...',
-    text: 'Usted no es usuario!',
-  })
-// Disabling fields after 3 attempts.
+    text: 'Ingrese su usuario y contraseña!',
+    })
+return false;
+}
+else if ( username == "" && password == ""){
+Swal.fire({
+    icon: 'success',
+    title: 'Bienvenido!',
+    text: 'Usted es usuario!',
+    })
+
 if( attempt == 0){
 document.getElementById("username").disabled = true;
 document.getElementById("password").disabled = true;

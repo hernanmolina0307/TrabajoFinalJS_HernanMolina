@@ -10,9 +10,8 @@ const montoFinal = document.getElementById('finalAmount');
 const cuotasFinales = document.getElementById('finalFees');
 const intereses = document.getElementById('interests');
 const totalADevolver = document.getElementById('totalAmount');
-const valorPorCouta = document.getElementById('valorPorCouta');
 
-const tasa = 0.07; // 70%
+const tasa = 0.07;
 
 formulario.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -20,41 +19,34 @@ formulario.addEventListener('submit', (e) => {
     calcularCuotaPrestamo();
 });
 
+// Calculamos la cuota del préstamo
 const calcularCuotaPrestamo = () => {
-    const cuotaPrestamo = tasa * monto.value / (1 - (1 + tasa) ** -cuotas.value);
+    const cuotaPrestamo = tasa * monto.value / (1 - (1+tasa)**-cuotas.value);
     calcularTotalPrestamo(cuotaPrestamo);
 };
 
+// Calculamos el total del préstamo
 const calcularTotalPrestamo = (cuotaPrestamo) => {
     const total = Math.ceil(cuotaPrestamo) * cuotas.value;
-
     const prestamo = construirPrestamo(monto.value, cuotas.value, total - monto.value, total);
-
     pintarPrestamo(prestamo)
-
     guardarPrestamoStorage(prestamo)
 };
 
-const calcularValorCuota= () => {
-    const valorPorCouta =  (totalADevolver / cuotasFinales);
-}  
-   
+const pintarPrestamo = (prestamo) => {
+    montoFinal.innerText = `$${prestamo.monto}`;
+    cuotasFinales.innerText = `${prestamo.cuotas}`;
+    intereses.innerText = `$${prestamo.intereses}`;
+    totalADevolver.innerText = `$${prestamo.total}`;
+};
 
-    (prestamo) => {
-        montoFinal.innerText = `$${prestamo.monto}`;
-        intereses.innerText = `$${prestamo.intereses}`;
-        cuotasFinales.innerText = `${prestamo.cuotas}`;
-        valorCouta.innerText = `${prestamo.valorCouta}`;
-        totalADevolver.innerText = `$${prestamo.total}`;
-    }
-
-const construirPrestamo = (montoValue, interesesValue, cuotasValue, valorCouta, totalValue) => {
+// Factory que me permite crear objetos prestamo
+const construirPrestamo = (montoValue, cuotasValue, interesesValue, totalValue) => {
     return {
         monto: montoValue,
-        intereses: interesesValue,
         cuotas: cuotasValue,
-        valorCuota: valorValue,
-        total: totalValue,
+        intereses: interesesValue,
+        total: totalValue
     }
 };
 
@@ -67,20 +59,29 @@ const obtenerPrestamoStorage = () => {
     return prestamoStorage;
 };
 
-
 document.addEventListener('DOMContentLoaded', () => {
     if (localStorage.getItem('prestamo')) {
         const prestamoStorage = obtenerPrestamoStorage();
+        // Reutilizamos la función pintarPrestamo para volver a mostrar los datos cuando la página se actualice
         pintarPrestamo(prestamoStorage);
     }
 })
-const simulate = document.getElementById('simulate');
-simulate.addEventListener('click', () => {
-    // Lógica para ir al checkout
+const simulate = document.getElementById('simulate button');
+formulario.addEventListener("submit", (e) => {
+
+    e.preventDefault();
     
-        Swal.fire({
-            icon: 'success',
-            title: 'Simulacion realizada',
-           text: 'Enviaremos a su correo la informacion!'
-        })
-});
+    if (form.checkValidity()) {
+    
+    Swal.fire({
+    icon: "success",
+    title: "Simulacion realizada",
+    text: "Enviaremos a su correo la informacion!"
+    })
+    }
+    
+    calcularCuotaPrestamo();
+    
+    });
+    
+    
